@@ -1,8 +1,14 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <limits.h>
+#include <stdbool.h>
+
 // State represents the state of some step
-typedef uint8_t Cell;
+typedef unsigned char Cell;
 struct State{
     Cell** cells; // cells in 2D world
     int width;  // the width of 2D world
@@ -14,14 +20,14 @@ struct State{
 * @param configFileName configuration filename
 * @param initialState inital state
 */
-void readConfiguration(char* configFileName, State* initialState);
+void readConfiguration(char* configFileName, struct State* initialState);
 
 /**
 * Execute one step
 * @param currentState current state
 * @param nextState next state
 */
-void oneStep(State* currentState, State* nextState);
+void oneStep(struct State* currentState, struct State* nextState);
 
 /**
 * Check if the game should terminate
@@ -29,19 +35,19 @@ void oneStep(State* currentState, State* nextState);
 * @param prevState previous state
 * @param maximalStep maximal step
 */
-bool shouldTerminate(State* currentState, State* prevState, int maximalStep);
+bool shouldTerminate(struct State* currentState, struct State* prevState, int maximalStep);
 
 /**
 * Display current state of the game
 * @param currentState current state
 */
-void displayCurrentState(State* currentState);
+void displayCurrentState(struct State* currentState);
 
 /**
 * Write the final state into the output file
 * @param outputFileName the output filename
 * @param finalState final state
 */
-void writeState(char* outputFileName, State* finalState);
+void writeState(char* outputFileName, struct State* finalState);
 
 #endif // GAME_H
