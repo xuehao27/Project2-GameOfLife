@@ -7,6 +7,7 @@
 #include <limits.h>
 #include <stdbool.h>
 #include <unistd.h>
+#include <SDL2/SDL.h>
 
 // State represents the state of some step
 typedef unsigned char Cell;

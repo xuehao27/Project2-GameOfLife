@@ -1,5 +1,10 @@
 #include "game.h"
 
+SDL_Renderer* renderer;
+SDL_Window* window;
+#define SIZE 80
+
+
 #ifndef TEST
 int main(int argc, char* argv[]){
     // check the least number of arguments
@@ -77,6 +82,17 @@ void runGame(struct State* currentState, int maximalStep){
     }
     
     // run the game until the game needs termination
+    // initiate SDL
+#ifdef DISPLAY
+    window = SDL_CreateWindow("SDL2:GameOfLife", 
+    SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED,
+    SIZE*currentState->width+3*(currentState->width+1),
+    SIZE*currentState->height+3*(currentState->height+1),
+    SDL_WINDOW_SHOWN);
+
+    renderer =  SDL_CreateRenderer( window, -1, SDL_RENDERER_ACCELERATED);
+#endif
+
     int curStep = 1;
     while(true){
         // execute one step
@@ -85,7 +101,7 @@ void runGame(struct State* currentState, int maximalStep){
         // display this state
         displayCurrentState(currentState);
 #endif
-        sleep(0.5);
+        sleep(1);
         if(shouldTerminate(currentState, &nextState, curStep, maximalStep)){
             // the gmae terminates
             break;
@@ -96,6 +112,7 @@ void runGame(struct State* currentState, int maximalStep){
                 currentState->cells[iRow][iCol] = nextState.cells[iRow][iCol];
             }
         }
+        curStep++;
     }
 }
 
@@ -174,8 +191,50 @@ bool shouldTerminate(struct State* currentState, struct State* prevState,
 */
 void displayCurrentState(struct State* currentState){
     if(!currentState) return;
-
+    // draw the cells
+    for(int iRow = 0; iRow < currentState->height; iRow++){
+        for(int iCol = 0; iCol < currentState->width; iCol++){
+            // define the cells
+            SDL_Rect rect;
+            rect.x = (SIZE+3)*iCol+3;
+            rect.y = (SIZE+3)*iRow+3;
+            rect.w = SIZE;
+            rect.h = SIZE;
+            if(currentState->cells[iRow][iCol] == '1'){
+                // Black square represents alive cell.
+                SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+                SDL_RenderFillRect(renderer, &rect);
+            }else{
+                // White square represents dead cell.
+                SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+                SDL_RenderFillRect(renderer, &rect);
+            }
+        }
+    }
+    // draw the seperators
+    SDL_SetRenderDrawColor(renderer, 140, 140, 140, 255);
+    for(int iCol = 0; iCol < currentState->width; iCol++){
+        // define vertical lines
+        SDL_Rect mRect;
+        mRect.x = (SIZE+3)*iCol;
+        mRect.y = 0;
+        mRect.w = 3;
+        mRect.h = SIZE*currentState->height+3*(currentState->width+1);
+        
+        SDL_RenderFillRect(renderer, &mRect);
+    }
+    for(int iRow = 0; iRow < currentState->height; iRow++){
+        // define horizontal lines
+        SDL_Rect mRect;
+        mRect.x = 0;
+        mRect.y = (SIZE+3)*iRow;
+        mRect.w = SIZE*currentState->width+3*(currentState->width+1);
+        mRect.h = 3;
+        SDL_RenderFillRect(renderer, &mRect);
+    }
+    SDL_RenderPresent(renderer);
 }
+
 
 /**
 * Write the final state into the output file
