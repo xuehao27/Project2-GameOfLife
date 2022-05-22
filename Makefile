@@ -6,5 +6,5 @@ game: main.c game.h
 	$(CC) $(FLAGS) -DDISPLAY -o $@ $^ -lSDL2
 
 clean:
-	rm -f game
+	rm -f game test
 
