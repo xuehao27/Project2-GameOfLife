@@ -23,6 +23,14 @@ struct State{
 void readConfiguration(char* configFileName, struct State* initialState);
 
 /**
+* Run the game until the game needs termination
+* @param currentState current state
+* @param maximalStep maximal step
+* @param outputFileName output filename
+*/
+void runGame(struct State* currentState, int maximalStep, char* outputFileName);
+
+/**
 * Execute one step
 * @param currentState current state
 * @param nextState next state

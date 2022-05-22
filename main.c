@@ -1,5 +1,8 @@
 #include "game.h"
 
+bool displayMode = true; // This is used to indicate whether the state is displayed on screen.
+
+#ifndef TEST
 int main(int argc, char* argv[]){
     // check the least number of arguments
     if(argc < 3){
@@ -16,8 +19,10 @@ int main(int argc, char* argv[]){
     struct State currentState, nextState;
     readConfiguration(configFileName, &currentState);
 
+
     return 0;
 }
+#endif
 
 /**
 * Read the intial state from the configuration
@@ -45,6 +50,16 @@ void readConfiguration(char* configFileName, struct State* initialState){
         }
         fgetc(inFile);
     }
+}
+
+/**
+* Run the game until the game needs termination
+* @param currentState current state
+* @param maximalStep maximal step
+* @param outputFileName output filename
+*/
+void runGame(struct State* currentState, int maximalStep, char* outputFileName){
+
 }
 
 /**

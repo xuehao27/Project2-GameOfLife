@@ -8,5 +8,3 @@ game: main.c game.h
 clean:
 	rm -f game
 
-test:
-	$(CC) $(FLAGS) -o test test.c main.c main.h
