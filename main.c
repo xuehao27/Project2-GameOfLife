@@ -1,7 +1,5 @@
 #include "game.h"
 
-bool displayMode = true; // This is used to indicate whether the state is displayed on screen.
-
 #ifndef TEST
 int main(int argc, char* argv[]){
     // check the least number of arguments
@@ -78,6 +76,27 @@ void runGame(struct State* currentState, int maximalStep){
         nextState.cells[i] = (Cell*)malloc(nextState.width*sizeof(Cell));
     }
     
+    // run the game until the game needs termination
+    int curStep = 1;
+    while(true){
+        // execute one step
+        oneStep(currentState, &nextState);
+#ifdef DISPLAY
+        // display this state
+        displayCurrentState(currentState);
+#endif
+        sleep(0.5);
+        if(shouldTerminate(currentState, &nextState, curStep, maximalStep)){
+            // the gmae terminates
+            break;
+        }
+        // copy the state
+        for(int iRow = 0; iRow < currentState->height; iRow++){
+            for(int iCol = 0; iCol < currentState->width; iCol++){
+                currentState->cells[iRow][iCol] = nextState.cells[iRow][iCol];
+            }
+        }
+    }
 }
 
 /**

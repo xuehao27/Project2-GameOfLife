@@ -76,7 +76,21 @@ void testExecuteOneStep(){
 }
 
 void testRunGame(){
-    
+    struct State currentState;
+    readConfiguration("initial_state1", &currentState);
+    runGame(&currentState, 10000);
+    // check if the final state is correct
+    unsigned char expectedCells[][6] = {
+        "00000", "00000", "00000", "00011","00011"
+    };
+    assert(currentState.width == 5);
+    assert(currentState.height == 5);
+    for(int i = 0; i < 5; i++){
+        for(int j = 0;j < 5; j++){
+            assert(currentState.cells[i][j] == expectedCells[i][j]);
+        }
+    }
+    freeState(&currentState);
 }
 
 
