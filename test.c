@@ -81,7 +81,21 @@ void testRunGame(){
 
 
 void testCheckIfTheGameOver(){
+    struct State currentState;
+    readConfiguration("initial_state1", &currentState);
 
+    assert(shouldTerminate(&currentState, &currentState, 1, 10));
+    // allocate a state
+    struct State nextState;
+    nextState.width = currentState.width;
+    nextState.height = currentState.height;
+    nextState.cells = (Cell**)malloc(nextState.height*sizeof(Cell*));
+    for(int i = 0; i < nextState.height; i++){
+        nextState.cells[i] = (Cell*)malloc(nextState.width*sizeof(Cell));
+    }
+    // calcualte next step
+    oneStep(&currentState, &nextState);
+    assert(!shouldTerminate(&currentState, &nextState, 2, 8));
 }
 
 int main(){

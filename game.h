@@ -40,9 +40,11 @@ void oneStep(struct State* currentState, struct State* nextState);
 * Check if the game should terminate
 * @param currentState current state
 * @param prevState previous state
+* @param curStep current step
 * @param maximalStep maximal step
 */
-bool shouldTerminate(struct State* currentState, struct State* prevState, int maximalStep);
+bool shouldTerminate(struct State* currentState, struct State* prevState,
+    int curStep, int maximalStep);
 
 /**
 * Display current state of the game

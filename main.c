@@ -131,11 +131,22 @@ void oneStep(struct State* currentState, struct State* nextState){
 * Check if the game should terminate
 * @param currentState current state
 * @param prevState previous state
+* @param curStep current step
 * @param maximalStep maximal step
 */
-bool shouldTerminate(struct State* currentState, struct State* prevState, int maximalStep){
+bool shouldTerminate(struct State* currentState, struct State* prevState, 
+    int curStep, int maximalStep){
     if(!currentState || !prevState) return true;
-    return false;
+    if(curStep > maximalStep) return true;
+    // check if the state has changed
+    for(int iRow = 0; iRow < currentState->height; iRow++){
+        for(int iCol = 0; iCol < currentState->width; iCol++){
+            if(currentState->cells[iRow][iCol] != prevState->cells[iRow][iCol]){
+                return false;
+            }
+        }
+    }
+    return true;
 }
 
 /**
