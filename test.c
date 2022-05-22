@@ -8,7 +8,7 @@ extern bool displayMode;
 // The readConfiguration() function should read the inital state correctly.
 void testReadInitialState(){
     struct State currentState;
-    readConfiguration("inital_state1", &currentState);
+    readConfiguration("initial_state1", &currentState);
     // check if current state is correct
     unsigned char expectedCells[][6] = {
         "00000", "00100", "10100", "01100","00000"
@@ -20,10 +20,29 @@ void testReadInitialState(){
             assert(currentState.cells[i][j] == expectedCells[i][j]);
         }
     }
+    freeState(&currentState);
 }
 
 void testWriteFinalState(){
+    struct State currentState;
+    readConfiguration("initial_state1", &currentState);
+    // write this stat into the file
+    writeState("out1.txt", &currentState);
+    freeState(&currentState);
 
+    readConfiguration("out1.txt", &currentState);
+    // check if current state is correct
+    unsigned char expectedCells[][6] = {
+        "00000", "00100", "10100", "01100","00000"
+    };
+    assert(currentState.width == 5);
+    assert(currentState.height == 5);
+    for(int i = 0; i < 5; i++){
+        for(int j = 0;j < 5; j++){
+            assert(currentState.cells[i][j] == expectedCells[i][j]);
+        }
+    }
+    freeState(&currentState);
 }
 
 void testExecuteOneStep(){

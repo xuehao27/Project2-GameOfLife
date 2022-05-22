@@ -16,10 +16,18 @@ int main(int argc, char* argv[]){
     }
     // read inital state from the file
     char* configFileName = argv[1];
-    struct State currentState, nextState;
+    struct State currentState;
     readConfiguration(configFileName, &currentState);
 
+    // run the game
+    char* outputFileName = argv[2];
+    runGame(&currentState, maximalStep);
 
+    // write the final state into a file
+    writeState(outputFileName, &currentState);
+
+    // free the memory
+    freeState(&currentState);
     return 0;
 }
 #endif
@@ -33,7 +41,7 @@ void readConfiguration(char* configFileName, struct State* initialState){
     FILE* inFile = fopen(configFileName, "r");
     if(!inFile){
         // canot open the file
-        perror("ERROR:");
+        perror("ERROR");
         exit(1);
     }
     // read the width and height of 2D world
@@ -50,15 +58,15 @@ void readConfiguration(char* configFileName, struct State* initialState){
         }
         fgetc(inFile);
     }
+    fclose(inFile);
 }
 
 /**
 * Run the game until the game needs termination
 * @param currentState current state
 * @param maximalStep maximal step
-* @param outputFileName output filename
 */
-void runGame(struct State* currentState, int maximalStep, char* outputFileName){
+void runGame(struct State* currentState, int maximalStep){
 
 }
 
@@ -95,5 +103,33 @@ void displayCurrentState(struct State* currentState){
 * @param finalState final state
 */
 void writeState(char* outputFileName, struct State* finalState){
+    FILE* outFile = fopen(outputFileName, "w");
+    if(!outFile){
+        // cannot open the file
+        perror("ERROR");
+        exit(1);
+    }
+    // write the width and height of 2D world
+    fprintf(outFile, "%d %d\n", finalState->width, finalState->height);
+    // write the cells
+    for(int i = 0; i < finalState->height; i++){
+        if(i > 0){
+            fprintf(outFile, "\n");
+        }
+        for(int j = 0;j < finalState->width; j++){
+            fprintf(outFile, "%c", finalState->cells[i][j]);
+        }
+    }
+    fclose(outFile);
+}
 
+/**
+* Free the memeory of the stata
+* @param the state
+*/
+void freeState(struct State* state){
+    for(int i = 0; i < state->height; i++){
+        free(state->cells[i]);
+    }
+    free(state->cells);
 }

@@ -26,9 +26,8 @@ void readConfiguration(char* configFileName, struct State* initialState);
 * Run the game until the game needs termination
 * @param currentState current state
 * @param maximalStep maximal step
-* @param outputFileName output filename
 */
-void runGame(struct State* currentState, int maximalStep, char* outputFileName);
+void runGame(struct State* currentState, int maximalStep);
 
 /**
 * Execute one step
@@ -58,4 +57,9 @@ void displayCurrentState(struct State* currentState);
 */
 void writeState(char* outputFileName, struct State* finalState);
 
+/**
+* Free the memeory of the stata
+* @param the state
+*/
+void freeState(struct State* state);
 #endif // GAME_H
