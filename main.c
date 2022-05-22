@@ -38,6 +38,7 @@ int main(int argc, char* argv[]){
 * @param initialState inital state
 */
 void readConfiguration(char* configFileName, struct State* initialState){
+    if(!configFileName || !initialState) return;
     FILE* inFile = fopen(configFileName, "r");
     if(!inFile){
         // canot open the file
@@ -67,7 +68,16 @@ void readConfiguration(char* configFileName, struct State* initialState){
 * @param maximalStep maximal step
 */
 void runGame(struct State* currentState, int maximalStep){
-
+    if(!currentState) return;
+    // allocate a state
+    struct State nextState;
+    nextState.width = currentState->width;
+    nextState.height = currentState->height;
+    nextState.cells = (Cell**)malloc(nextState.height*sizeof(Cell*));
+    for(int i = 0; i < nextState.height; i++){
+        nextState.cells[i] = (Cell*)malloc(nextState.width*sizeof(Cell));
+    }
+    
 }
 
 /**
@@ -76,7 +86,45 @@ void runGame(struct State* currentState, int maximalStep){
 * @param nextState next state
 */
 void oneStep(struct State* currentState, struct State* nextState){
-    
+    if(!currentState || !nextState) return;
+
+    for(int iRow = 0; iRow < currentState->height; iRow++){
+        for(int iCol = 0; iCol < currentState->width; iCol++){
+            // compute the number of alive cells
+            int num = 0;
+            for(int i = -1; i <= 1; i++){
+                for(int j = -1; j <= 1; j++){
+                    if(i == 0 && j == 0){
+                        continue;
+                    }
+                    int mRow = iRow + i;
+                    int mCol = iCol + j;
+                    if(mRow < 0 || mCol < 0 || mRow >= currentState->height ||
+                        mCol >= currentState->width){
+                            // the location is invalid
+                            continue;
+                        }
+                    if(currentState->cells[mRow][mCol] == '1'){
+                        num++;
+                    }
+                }
+            }
+            // compute the status of the cell in next step
+            if(currentState->cells[iRow][iCol] == '0'){
+                if(num == 3){
+                    nextState->cells[iRow][iCol] = '1';
+                }else{
+                    nextState->cells[iRow][iCol] = '0';
+                }
+            }else{
+                if(num == 2 || num == 3){
+                    nextState->cells[iRow][iCol] = '1';
+                }else{
+                    nextState->cells[iRow][iCol] = '0';
+                }
+            }
+        }
+    }
 }
 
 /**
@@ -86,6 +134,7 @@ void oneStep(struct State* currentState, struct State* nextState){
 * @param maximalStep maximal step
 */
 bool shouldTerminate(struct State* currentState, struct State* prevState, int maximalStep){
+    if(!currentState || !prevState) return true;
     return false;
 }
 
@@ -94,7 +143,8 @@ bool shouldTerminate(struct State* currentState, struct State* prevState, int ma
 * @param currentState current state
 */
 void displayCurrentState(struct State* currentState){
-    
+    if(!currentState) return;
+
 }
 
 /**
@@ -103,6 +153,7 @@ void displayCurrentState(struct State* currentState){
 * @param finalState final state
 */
 void writeState(char* outputFileName, struct State* finalState){
+    if(!outputFileName || !finalState) return;
     FILE* outFile = fopen(outputFileName, "w");
     if(!outFile){
         // cannot open the file

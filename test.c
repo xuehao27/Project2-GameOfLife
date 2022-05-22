@@ -46,7 +46,33 @@ void testWriteFinalState(){
 }
 
 void testExecuteOneStep(){
+    struct State currentState;
+    readConfiguration("initial_state1", &currentState);
+    // allocate a state
+    struct State nextState;
+    nextState.width = currentState.width;
+    nextState.height = currentState.height;
+    nextState.cells = (Cell**)malloc(nextState.height*sizeof(Cell*));
+    for(int i = 0; i < nextState.height; i++){
+        nextState.cells[i] = (Cell*)malloc(nextState.width*sizeof(Cell));
+    }
 
+    // calcualte next step
+    oneStep(&currentState, &nextState);
+    // check if the result is correct
+    unsigned char expectedCells[][6] = {
+        "00000", "01000", "00110", "01100","00000"
+    };
+    assert(nextState.width == 5);
+    assert(nextState.height == 5);
+    for(int i = 0; i < 5; i++){
+        for(int j = 0;j < 5; j++){
+            assert(nextState.cells[i][j] == expectedCells[i][j]);
+        }
+    }
+
+    freeState(&currentState);
+    freeState(&nextState);
 }
 
 void testRunGame(){
